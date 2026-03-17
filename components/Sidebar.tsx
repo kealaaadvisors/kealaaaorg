@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { LayoutGrid, LogOut, ChevronDown } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 const CRM_URL      = process.env.NEXT_PUBLIC_CRM_URL      || 'https://crm.keala.io'
 const RESEARCH_URL = process.env.NEXT_PUBLIC_RESEARCH_URL || 'https://research.keala.io'
@@ -11,6 +12,12 @@ const RESEARCH_URL = process.env.NEXT_PUBLIC_RESEARCH_URL || 'https://research.k
 export function Sidebar() {
   const [featuresOpen, setFeaturesOpen] = useState(true)
   const router = useRouter()
+  const supabase = createClient()
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
 
   return (
     <aside style={{
@@ -82,7 +89,7 @@ export function Sidebar() {
       {/* Logout */}
       <div style={{ padding: '0 0.75rem' }}>
         <button
-          onClick={() => router.push('/login')}
+          onClick={handleLogout}
           style={{
             width: '100%',
             display: 'flex',
