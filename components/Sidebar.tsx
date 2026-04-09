@@ -23,8 +23,8 @@ export function Sidebar() {
     <aside style={{
       width: 220,
       minHeight: '100vh',
-      background: '#ffffff',
-      borderRight: '1px solid #dce6f0',
+      background: '#16191f',
+      borderRight: '1px solid rgba(255,255,255,0.06)',
       display: 'flex',
       flexDirection: 'column',
       padding: '1.5rem 0',
@@ -38,54 +38,11 @@ export function Sidebar() {
           alt="Keala Advisors"
           width={160}
           height={40}
-          style={{ objectFit: 'contain', objectPosition: 'left' }}
+          style={{ objectFit: 'contain', objectPosition: 'left', borderRadius: 4 }}
         />
       </div>
 
-      {/* Nav */}
-      <nav style={{ flex: 1, padding: '0 0.75rem' }}>
-
-        <div style={{ marginBottom: '0.25rem' }}>
-          <button
-            onClick={() => setFeaturesOpen(!featuresOpen)}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.6rem',
-              padding: '0.55rem 0.75rem',
-              borderRadius: 7,
-              border: 'none',
-              background: 'transparent',
-              color: '#7a97b0',
-              fontSize: '0.78rem',
-              fontFamily: 'DM Sans, sans-serif',
-              cursor: 'pointer',
-              letterSpacing: '0.05em',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-            }}
-          >
-            <LayoutGrid size={14} />
-            <span style={{ flex: 1, textAlign: 'left' }}>Features</span>
-            <ChevronDown
-              size={13}
-              style={{
-                transition: 'transform 0.2s',
-                transform: featuresOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
-              }}
-            />
-          </button>
-
-          {featuresOpen && (
-            <div style={{ marginTop: '0.25rem', paddingLeft: '0.5rem' }}>
-              <NavLink href={CRM_URL} label="CRM & Workflow" />
-              <NavLink href={RESEARCH_URL} label="Research Database" />
-            </div>
-          )}
-        </div>
-      </nav>
-
+     
       {/* Settings + Logout */}
       <div style={{ padding: '0 0.75rem' }}>
         <button
@@ -99,15 +56,15 @@ export function Sidebar() {
             borderRadius: 7,
             border: 'none',
             background: 'transparent',
-            color: '#7a97b0',
+            color: '#4a5568',
             fontSize: '0.82rem',
             fontFamily: 'DM Sans, sans-serif',
             cursor: 'pointer',
             transition: 'color 0.15s',
             marginBottom: '0.25rem',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#2e7db5')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = '#7a97b0')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#a0aec0')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#4a5568')}
         >
           <Settings size={14} />
           <span>Settings</span>
@@ -123,14 +80,14 @@ export function Sidebar() {
             borderRadius: 7,
             border: 'none',
             background: 'transparent',
-            color: '#aac4d8',
+            color: '#4a5568',
             fontSize: '0.82rem',
             fontFamily: 'DM Sans, sans-serif',
             cursor: 'pointer',
             transition: 'color 0.15s',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#e05252')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = '#aac4d8')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#fc8181')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#4a5568')}
         >
           <LogOut size={14} />
           <span>Logout</span>
@@ -153,7 +110,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
         gap: '0.5rem',
         padding: '0.5rem 0.75rem',
         borderRadius: 7,
-        color: '#5a7a94',
+        color: '#6b7280',
         fontSize: '0.875rem',
         fontFamily: 'DM Sans, sans-serif',
         textDecoration: 'none',
@@ -161,18 +118,18 @@ function NavLink({ href, label }: { href: string; label: string }) {
         marginBottom: '0.1rem',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.background = '#eaf3fa'
-        e.currentTarget.style.color = '#2e7db5'
+        e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
+        e.currentTarget.style.color = '#e2e8f0'
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = 'transparent'
-        e.currentTarget.style.color = '#5a7a94'
+        e.currentTarget.style.color = '#6b7280'
       }}
     >
       <span style={{
-        width: 5, height: 5,
+        width: 4, height: 4,
         borderRadius: '50%',
-        background: '#5BA4CF',
+        background: '#4a5568',
         flexShrink: 0,
       }} />
       {label}

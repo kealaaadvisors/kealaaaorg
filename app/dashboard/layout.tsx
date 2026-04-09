@@ -7,17 +7,17 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#111318' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f0f4f8', overflow: 'auto' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#111318', overflow: 'auto' }}>
         {/* Top bar */}
         <div style={{
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'center',
           padding: '0.85rem 1.5rem',
-          background: '#ffffff',
-          borderBottom: '1px solid #dce6f0',
+          background: '#16191f',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
           flexShrink: 0,
         }}>
           <UserMenu />
