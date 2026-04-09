@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { LayoutGrid, LogOut, ChevronDown } from 'lucide-react'
+import { LayoutGrid, LogOut, ChevronDown, Settings } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -86,8 +86,32 @@ export function Sidebar() {
         </div>
       </nav>
 
-      {/* Logout */}
+      {/* Settings + Logout */}
       <div style={{ padding: '0 0.75rem' }}>
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent('open-profile-modal'))}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.6rem',
+            padding: '0.55rem 0.75rem',
+            borderRadius: 7,
+            border: 'none',
+            background: 'transparent',
+            color: '#7a97b0',
+            fontSize: '0.82rem',
+            fontFamily: 'DM Sans, sans-serif',
+            cursor: 'pointer',
+            transition: 'color 0.15s',
+            marginBottom: '0.25rem',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#2e7db5')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#7a97b0')}
+        >
+          <Settings size={14} />
+          <span>Settings</span>
+        </button>
         <button
           onClick={handleLogout}
           style={{

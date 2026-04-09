@@ -2,12 +2,26 @@
 
 import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
-const CRM_URL      = process.env.CRM_URL      || 'https://crm.keala.io'
+const CRM_URL      = process.env.CRM_URL      || 'https://ops.keala.io'
 const RESEARCH_URL = process.env.RESEARCH_URL || 'https://research.keala.io'
+const QUESTIONAIRE_URL = process.env.RESEARCH_URL || 'https://questionnaire.keala.io'
+
 
 export default function DashboardPage() {
-  const name = 'there'
+  const [name, setName] = useState('there')
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        const display = user.user_metadata?.username || user.email?.split('@')[0] || 'there'
+        setName(display)
+      }
+    })
+  }, [])
 
   return (
     <div style={{ padding: '2.5rem 2rem', maxWidth: 720 }}>
@@ -46,6 +60,11 @@ export default function DashboardPage() {
           title="Research Database"
           description="Investment research, analysis, and data repository."
           tag="research.keala.io"
+        />    <PlatformCard
+          href={QUESTIONAIRE_URL}
+          title="Questionaire"
+          description="Investment research, analysis, and data repository."
+          tag="Questionaire.keala.io"
         />
       </div>
 

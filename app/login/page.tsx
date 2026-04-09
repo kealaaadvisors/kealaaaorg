@@ -2,31 +2,30 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
+type Mode = 'signin' | 'forgot'
+
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const resetSuccess = searchParams.get('reset') === 'success'
+  const [mode, setMode]         = useState<Mode>('signin')
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [error, setError]       = useState('')
-  const [message, setMessage]   = useState('')
+  const [success, setSuccess]   = useState('')
   const [loading, setLoading]   = useState(false)
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSignIn(e: React.FormEvent) {
     e.preventDefault()
     setError('')
-    setMessage('')
     setLoading(true)
 
     const supabase = createClient()
-
-    // Try sign in first
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
 
     if (!signInError) {
       router.push('/dashboard')
@@ -34,39 +33,38 @@ export default function LoginPage() {
       return
     }
 
-    // If credentials are wrong (account doesn't exist), try sign up
-    if (signInError.message === 'Invalid login credentials') {
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      })
+    setError(signInError.message)
+    setLoading(false)
+  }
 
-      setLoading(false)
+  async function handleForgotPassword(e: React.FormEvent) {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+    setLoading(true)
 
-      if (signUpError) {
-        setError(signUpError.message)
-        return
-      }
+    const supabase = createClient()
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
 
-      // If session exists, email confirmation is disabled — go straight to dashboard
-      if (data.session) {
-        router.push('/dashboard')
-        router.refresh()
-        return
-      }
-
-      // Email confirmation required
-      setMessage('Account created! Check your email to confirm, then sign in.')
-      return
+    if (resetError) {
+      setError(resetError.message)
+    } else {
+      setSuccess('Check your email for a password reset link.')
     }
 
-    // Other sign-in errors (e.g. wrong password for existing account)
     setLoading(false)
-    setError(signInError.message)
+  }
+
+  function switchMode(next: Mode) {
+    setMode(next)
+    setError('')
+    setSuccess('')
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#f0f4f8' }}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#1b1b1b' }}>
       <div className="w-full max-w-sm">
 
         {/* Logo */}
@@ -74,72 +72,118 @@ export default function LoginPage() {
           <Image
             src="/kealalogo.jpeg"
             alt="Keala Advisors"
-            width={200}
-            height={50}
-            style={{ objectFit: 'contain' }}
+            width={180}
+            height={44}
+            style={{ objectFit: 'contain', borderRadius: 4 }}
           />
         </div>
 
         {/* Card */}
         <div style={{
-          background: '#ffffff',
-          border: '1px solid #dce6f0',
-          borderRadius: 12,
+          background: '#242424',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 8,
           padding: '2rem',
-          boxShadow: '0 2px 12px rgba(91,164,207,0.08)',
+          boxShadow: '0 0 0 1px rgba(0,0,0,0.88), 0 4px 16px rgba(0,0,0,0.4)',
         }}>
-          <h1 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#1e3a52', marginBottom: '0.25rem' }}>
-            Sign in
+          <h1 style={{ fontSize: '1rem', fontWeight: 600, color: '#dcdad5', marginBottom: '0.25rem' }}>
+            {mode === 'signin' ? 'Sign in' : 'Reset password'}
           </h1>
-          <p style={{ fontSize: '0.85rem', color: '#7a97b0', marginBottom: '1.75rem' }}>
-            Access the internal portal — new users will be registered automatically
+          <p style={{ fontSize: '0.8rem', color: '#7a7872', marginBottom: '1.75rem' }}>
+            {mode === 'signin'
+              ? 'Access the internal portal'
+              : "Enter your email and we'll send you a reset link"}
           </p>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div>
-              <label style={labelStyle}>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="you@keala.io"
-                style={inputStyle}
-              />
-            </div>
+          {resetSuccess && (
+            <p style={{ fontSize: '0.78rem', color: '#6fcf97', background: 'rgba(111,207,151,0.08)', border: '1px solid rgba(111,207,151,0.2)', borderRadius: 6, padding: '0.5rem 0.75rem', marginBottom: '1rem' }}>
+              Password updated successfully. Please sign in.
+            </p>
+          )}
 
-            <div>
-              <label style={labelStyle}>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-                style={inputStyle}
-              />
-            </div>
+          {mode === 'signin' ? (
+            <form onSubmit={handleSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div>
+                <label style={labelStyle}>Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="you@keala.io"
+                  style={inputStyle}
+                />
+              </div>
 
-            {error && (
-              <p style={{ fontSize: '0.8rem', color: '#e05252', marginTop: '-0.25rem' }}>{error}</p>
-            )}
-            {message && (
-              <p style={{ fontSize: '0.8rem', color: '#2e7d32', marginTop: '-0.25rem' }}>{message}</p>
-            )}
+              <div>
+              
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="••••••••"
+                  style={inputStyle}
+                />
+              </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              style={buttonStyle(loading)}
-            >
-              {loading ? 'Please wait…' : 'Sign in'}
-            </button>
-          </form>
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                  <label style={{ ...labelStyle, marginBottom: 0 }}>Password</label>
+                  <button
+                    type="button"
+                    onClick={() => switchMode('forgot')}
+                    style={{ fontSize: '0.72rem', color: '#575ECF', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 0.2s' }}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              {error && (
+                <p style={{ fontSize: '0.78rem', color: '#e05252', marginTop: '-0.1rem' }}>{error}</p>
+              )}
+
+              <button type="submit" disabled={loading} style={buttonStyle(loading)}>
+                {loading ? 'Please wait…' : 'Sign in'}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleForgotPassword} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div>
+                <label style={labelStyle}>Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="you@keala.io"
+                  style={inputStyle}
+                />
+              </div>
+
+              {error && (
+                <p style={{ fontSize: '0.78rem', color: '#e05252', marginTop: '-0.1rem' }}>{error}</p>
+              )}
+              {success && (
+                <p style={{ fontSize: '0.78rem', color: '#6fcf97', marginTop: '-0.1rem' }}>{success}</p>
+              )}
+
+              <button type="submit" disabled={loading} style={buttonStyle(loading)}>
+                {loading ? 'Sending…' : 'Send reset link'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => switchMode('signin')}
+                style={{ fontSize: '0.78rem', color: '#7a7872', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'center', transition: 'color 0.2s' }}
+              >
+                Back to sign in
+              </button>
+            </form>
+          )}
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.8rem', color: '#7a97b0' }}>
+        <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.78rem', color: '#7a7872' }}>
           Don&apos;t have an account?{' '}
-          <Link href="/signup" style={{ color: '#5BA4CF', textDecoration: 'none', fontWeight: 500 }}>
+          <Link href="/signup" style={{ color: '#575ECF', textDecoration: 'none', fontWeight: 500 }}>
             Create one
           </Link>
         </p>
@@ -151,8 +195,8 @@ export default function LoginPage() {
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: '0.75rem',
-  color: '#5a7a94',
+  fontSize: '0.72rem',
+  color: '#9a9790',
   marginBottom: '0.4rem',
   letterSpacing: '0.03em',
   fontWeight: 500,
@@ -160,29 +204,30 @@ const labelStyle: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: '#f5f9fc',
-  border: '1px solid #c8dcea',
-  borderRadius: 8,
-  padding: '0.65rem 0.85rem',
-  color: '#1e3a52',
-  fontSize: '0.9rem',
-  fontFamily: 'DM Sans, sans-serif',
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.1)',
+  borderRadius: 6,
+  padding: '0.6rem 0.8rem',
+  color: '#c5c1b9',
+  fontSize: '0.875rem',
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   outline: 'none',
-  transition: 'border-color 0.15s',
+  transition: 'border-color 0.2s cubic-bezier(0.4,0,0.2,1)',
+  boxSizing: 'border-box',
 }
 
 const buttonStyle = (loading: boolean): React.CSSProperties => ({
   width: '100%',
-  background: loading ? '#c8dcea' : '#5BA4CF',
-  color: loading ? '#7a97b0' : '#ffffff',
+  background: loading ? 'rgba(87,94,207,0.4)' : '#575ECF',
+  color: loading ? 'rgba(255,255,255,0.4)' : '#ffffff',
   border: 'none',
-  borderRadius: 8,
-  padding: '0.7rem',
-  fontSize: '0.9rem',
-  fontWeight: 600,
-  fontFamily: 'DM Sans, sans-serif',
+  borderRadius: 6,
+  padding: '0.65rem',
+  fontSize: '0.875rem',
+  fontWeight: 500,
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   cursor: loading ? 'not-allowed' : 'pointer',
-  marginTop: '0.25rem',
-  transition: 'background 0.15s',
+  marginTop: '0.15rem',
+  transition: 'background 0.2s cubic-bezier(0.4,0,0.2,1)',
   letterSpacing: '0.01em',
 })
