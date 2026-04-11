@@ -57,7 +57,7 @@ export default function SignupPage() {
         {/* Logo */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2.5rem' }}>
           <Image
-            src="/newLogo.jpeg"
+            src="/KealaLogo.png"
             alt="Keala Advisors"
             width={180}
             height={44}

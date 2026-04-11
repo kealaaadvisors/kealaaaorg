@@ -97,7 +97,7 @@ function LoginForm() {
           }}
         >
           <Image
-            src="/newLogo.jpeg"
+            src="/KealaLogo.png"
             alt="Keala Advisors"
             width={180}
             height={44}
@@ -107,6 +107,7 @@ function LoginForm() {
 
         {/* Card */}
         <div
+          className="login-card"
           style={{
             background: "#1a2332",
             border: "1px solid rgba(255,255,255,0.08)",

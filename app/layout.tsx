@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Keala — Internal Portal',
   description: 'Private access portal',
   icons: {
-    icon: '/newLogo.jpeg',
+    icon: '/KealaLogo.png',
   },
 }
 

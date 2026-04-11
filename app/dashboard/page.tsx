@@ -23,7 +23,7 @@ export default function DashboardPage() {
   }, [])
 
   return (
-    <div style={{ padding: '2.5rem 2rem', maxWidth: 1100 }}>
+    <div className="dashboard-content" style={{ padding: '2.5rem 2rem', maxWidth: 1100 }}>
 
     
 
@@ -38,12 +38,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Platform cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
         <PlatformCard
           href={CRM_URL}
           title="CRM & Workflow"
           description="Manage contacts, deals, tasks, and operational workflows."
-          tag="crm.keala.io"
+          tag="ops.keala.io"
         />
         <PlatformCard
           href={RESEARCH_URL}

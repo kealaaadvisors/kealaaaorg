@@ -6,11 +6,11 @@ import { LayoutGrid, LogOut, ChevronDown, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-const CRM_URL = process.env.NEXT_PUBLIC_CRM_URL || "https://crm.keala.io";
+const CRM_URL = process.env.NEXT_PUBLIC_CRM_URL || "https://ops.keala.io";
 const RESEARCH_URL =
   process.env.NEXT_PUBLIC_RESEARCH_URL || "https://research.keala.io";
 
-export function Sidebar() {
+export function Sidebar({ mobile }: { mobile?: boolean } = {}) {
   const [featuresOpen, setFeaturesOpen] = useState(true);
   const router = useRouter();
   const supabase = createClient();
@@ -22,8 +22,9 @@ export function Sidebar() {
 
   return (
     <aside
+      className={mobile ? undefined : "sidebar-desktop"}
       style={{
-        width: 220,
+        width: mobile ? "100%" : 220,
         minHeight: "100vh",
         background: "#0f1923",
         borderRight: "1px solid rgba(255,255,255,0.05)",
@@ -36,7 +37,7 @@ export function Sidebar() {
       {/* Logo */}
       <div style={{ padding: "0 1.25rem", marginBottom: "2rem" }}>
         <Image
-          src="/newLogo.jpeg"
+          src="/KealaLogo.png"
           alt="Keala Advisors"
           width={160}
           height={40}
@@ -47,30 +48,29 @@ export function Sidebar() {
           }}
         />
       </div>
-      <button
-     
-        style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.6rem",
-          padding: "0.55rem 0.75rem",
-          borderRadius: 7,
-          border: "none",
-          background: "transparent",
-          color: "#4a5568",
-          fontSize: "0.82rem",
-          fontFamily: "DM Sans, sans-serif",
-          cursor: "pointer",
-          transition: "color 0.15s",
-          marginBottom: "0.25rem",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = "#a0aec0")}
-        onMouseLeave={(e) => (e.currentTarget.style.color = "#4a5568")}
-      >
-        <Settings size={14} />
-        <span>Apps</span>
-      </button>
+      <div style={{ padding: "0 0.75rem" }}>
+        <button
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            padding: "0.55rem 0.75rem",
+            borderRadius: 7,
+            border: "none",
+            background: "transparent",
+            color: "#c9d1d9",
+            fontSize: "0.82rem",
+            fontFamily: "DM Sans, sans-serif",
+            cursor: "pointer",
+            transition: "color 0.15s",
+            marginBottom: "0.25rem",
+          }}
+        >
+          <LayoutGrid size={14} />
+          <span>Apps</span>
+        </button>
+      </div>
       <div style={{ flex: 1 }} />
 
       {/* Settings + Logout */}
@@ -88,15 +88,15 @@ export function Sidebar() {
             borderRadius: 7,
             border: "none",
             background: "transparent",
-            color: "#4a5568",
+            color: "#c9d1d9",
             fontSize: "0.82rem",
             fontFamily: "DM Sans, sans-serif",
             cursor: "pointer",
             transition: "color 0.15s",
             marginBottom: "0.25rem",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#a0aec0")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "#4a5568")}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#c9d1d9")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#8a94a6")}
         >
           <Settings size={14} />
           <span>Settings</span>
@@ -112,14 +112,14 @@ export function Sidebar() {
             borderRadius: 7,
             border: "none",
             background: "transparent",
-            color: "#4a5568",
+            color: "#c9d1d9",
             fontSize: "0.82rem",
             fontFamily: "DM Sans, sans-serif",
             cursor: "pointer",
             transition: "color 0.15s",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = "#fc8181")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "#4a5568")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#8a94a6")}
         >
           <LogOut size={14} />
           <span>Logout</span>

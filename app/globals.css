@@ -32,3 +32,40 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px #1c1917 inset !important;
   -webkit-text-fill-color: #f5f5f4 !important;
 }
+
+/* Mobile spacer hidden on desktop */
+.mobile-spacer {
+  display: none;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .sidebar-desktop {
+    display: none !important;
+  }
+  .mobile-nav-toggle {
+    display: flex !important;
+  }
+  .mobile-nav-drawer {
+    display: block !important;
+  }
+  .mobile-spacer {
+    display: block !important;
+  }
+  .topbar {
+    justify-content: flex-start !important;
+    padding: 0.65rem 1rem !important;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .dashboard-content {
+    padding: 1.5rem 1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem !important;
+  }
+}
