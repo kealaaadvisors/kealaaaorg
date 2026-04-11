@@ -35,11 +35,11 @@ export function Sidebar({ mobile }: { mobile?: boolean } = {}) {
       }}
     >
       {/* Logo */}
-      <div style={{ padding: "0 1.25rem", marginBottom: "2rem" }}>
+      <div style={{ padding: "0 2.25rem", marginBottom: "2rem" }}>
         <Image
           src="/KealaLogo.png"
           alt="Keala Advisors"
-          width={160}
+          width={120}
           height={40}
           style={{
             objectFit: "contain",

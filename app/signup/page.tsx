@@ -59,7 +59,7 @@ export default function SignupPage() {
           <Image
             src="/KealaLogo.png"
             alt="Keala Advisors"
-            width={180}
+            width={120}
             height={44}
             style={{ objectFit: 'contain', borderRadius: 4 }}
           />
