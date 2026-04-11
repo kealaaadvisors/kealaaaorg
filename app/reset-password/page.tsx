@@ -48,7 +48,7 @@ export default function ResetPasswordPage() {
         {/* Logo */}
         <div className="mb-10" style={{ display: 'flex', justifyContent: 'center' }}>
           <Image
-            src="/kealalogo.jpeg"
+            src="/newLogo.jpeg"
             alt="Keala Advisors"
             width={180}
             height={44}

@@ -5,6 +5,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Keala — Internal Portal',
   description: 'Private access portal',
+  icons: {
+    icon: '/newLogo.jpeg',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

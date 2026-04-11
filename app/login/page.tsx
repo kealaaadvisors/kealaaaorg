@@ -72,13 +72,13 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#1b1b1b' }}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#0f1923' }}>
       <div className="w-full max-w-sm">
 
         {/* Logo */}
         <div className="mb-10" style={{ display: 'flex', justifyContent: 'center' }}>
           <Image
-            src="/kealalogo.jpeg"
+            src="/newLogo.jpeg"
             alt="Keala Advisors"
             width={180}
             height={44}
@@ -88,11 +88,11 @@ function LoginForm() {
 
         {/* Card */}
         <div style={{
-          background: '#242424',
+          background: '#1a2332',
           border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: 8,
+          borderRadius: 10,
           padding: '2rem',
-          boxShadow: '0 0 0 1px rgba(0,0,0,0.88), 0 4px 16px rgba(0,0,0,0.4)',
+          boxShadow: '0 0 0 1px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.5)',
         }}>
           <h1 style={{ fontSize: '1rem', fontWeight: 600, color: '#dcdad5', marginBottom: '0.25rem' }}>
             {mode === 'signin' ? 'Sign in' : 'Reset password'}

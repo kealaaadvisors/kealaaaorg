@@ -1,26 +1,32 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { User, X, Camera, Check, AlertCircle } from 'lucide-react'
+import { User, X, Camera, Check, AlertCircle, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 
 export function UserMenu() {
   const supabase = createClient()
+  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
-  const [username, setUsername] = useState('')
+
+  // profile fields
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [address, setAddress] = useState('')
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
+
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    loadUser()
-  }, [])
+  useEffect(() => { loadUser() }, [])
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -41,10 +47,19 @@ export function UserMenu() {
   async function loadUser() {
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
+      const m = user.user_metadata ?? {}
       setEmail(user.email ?? '')
-      setUsername(user.user_metadata?.username ?? '')
-      setAvatarUrl(user.user_metadata?.avatar_url ?? null)
+      setFirstName(m.first_name ?? '')
+      setLastName(m.last_name ?? '')
+      setPhone(m.phone ?? '')
+      setAddress(m.address ?? '')
+      setAvatarUrl(m.avatar_url ?? null)
     }
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    router.push('/login')
   }
 
   function openModal() {
@@ -93,7 +108,13 @@ export function UserMenu() {
       }
 
       const { error: metaError } = await supabase.auth.updateUser({
-        data: { username, avatar_url: newAvatarUrl },
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          phone,
+          address,
+          avatar_url: newAvatarUrl,
+        },
       })
       if (metaError) throw metaError
 
@@ -118,8 +139,11 @@ export function UserMenu() {
   }
 
   const displayAvatar = avatarPreview ?? avatarUrl
-  const initials = username
-    ? username.slice(0, 2).toUpperCase()
+  const displayName = [firstName, lastName].filter(Boolean).join(' ') || 'User'
+  const initials = firstName && lastName
+    ? (firstName[0] + lastName[0]).toUpperCase()
+    : firstName
+    ? firstName.slice(0, 2).toUpperCase()
     : email
     ? email.slice(0, 2).toUpperCase()
     : '?'
@@ -134,8 +158,8 @@ export function UserMenu() {
             width: 34,
             height: 34,
             borderRadius: '50%',
-            border: '1.5px solid rgba(255,255,255,0.1)',
-            background: displayAvatar ? 'transparent' : '#1e2330',
+            border: '1.5px solid #d1d5db',
+            background: displayAvatar ? 'transparent' : '#f3f4f6',
             cursor: 'pointer',
             overflow: 'hidden',
             display: 'flex',
@@ -144,14 +168,14 @@ export function UserMenu() {
             padding: 0,
             transition: 'border-color 0.15s',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)')}
-          onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+          onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#9ca3af')}
+          onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#d1d5db')}
         >
           {displayAvatar ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={displayAvatar} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
-            <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#6b7280', letterSpacing: '0.02em' }}>
+            <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#374151', letterSpacing: '0.02em' }}>
               {initials}
             </span>
           )}
@@ -173,7 +197,7 @@ export function UserMenu() {
           }}>
             <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
               <p style={{ fontSize: '0.8rem', fontWeight: 600, color: '#e2e8f0', margin: 0 }}>
-                {username || 'User'}
+                {displayName}
               </p>
               <p style={{ fontSize: '0.72rem', color: '#4a5568', margin: '0.15rem 0 0' }}>
                 {email}
@@ -207,6 +231,34 @@ export function UserMenu() {
               <User size={13} />
               Edit Profile
             </button>
+            <button
+              onClick={handleLogout}
+              style={{
+                width: '100%',
+                padding: '0.65rem 1rem',
+                background: 'none',
+                border: 'none',
+                textAlign: 'left',
+                fontSize: '0.82rem',
+                color: '#9ca3af',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'background 0.1s, color 0.1s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                e.currentTarget.style.color = '#fc8181'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'none'
+                e.currentTarget.style.color = '#9ca3af'
+              }}
+            >
+              <LogOut size={13} />
+              Logout
+            </button>
           </div>
         )}
       </div>
@@ -223,6 +275,7 @@ export function UserMenu() {
             justifyContent: 'center',
             zIndex: 200,
             backdropFilter: 'blur(4px)',
+            padding: '1rem',
           }}
           onClick={(e) => { if (e.target === e.currentTarget) setModalOpen(false) }}
         >
@@ -232,7 +285,9 @@ export function UserMenu() {
             borderRadius: 16,
             padding: '2rem',
             width: '100%',
-            maxWidth: 420,
+            maxWidth: 480,
+            maxHeight: '90vh',
+            overflowY: 'auto',
             boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
             position: 'relative',
           }}>
@@ -264,11 +319,11 @@ export function UserMenu() {
               Edit Profile
             </h2>
             <p style={{ fontSize: '0.8rem', color: '#4a5568', marginBottom: '1.75rem' }}>
-              Update your username, email, or photo.
+              Update your personal info and profile photo.
             </p>
 
             {/* Avatar upload */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.75rem' }}>
               <div style={{ position: 'relative', width: 80, height: 80 }}>
                 <div style={{
                   width: 80,
@@ -327,14 +382,45 @@ export function UserMenu() {
             </div>
 
             <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
+              {/* First Name / Last Name row */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div>
+                  <label style={labelStyle}>First Name</label>
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Jane"
+                    style={inputStyle}
+                    onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}
+                    onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Last Name</label>
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Doe"
+                    style={inputStyle}
+                    onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}
+                    onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
+                  />
+                </div>
+              </div>
+
               <div>
-                <label style={labelStyle}>Username</label>
+                <label style={labelStyle}>Phone Number</label>
                 <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Your name"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+1 (555) 000-0000"
                   style={inputStyle}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
                 />
               </div>
 
@@ -347,6 +433,25 @@ export function UserMenu() {
                   required
                   placeholder="you@keala.io"
                   style={inputStyle}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
+                />
+              </div>
+
+              <div>
+                <label style={labelStyle}>Address</label>
+                <textarea
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="123 Main St, City, Country"
+                  rows={2}
+                  style={{
+                    ...inputStyle,
+                    resize: 'vertical',
+                    lineHeight: 1.5,
+                  }}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
                 />
               </div>
 

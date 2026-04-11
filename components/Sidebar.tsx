@@ -1,70 +1,102 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useState } from 'react'
-import { LayoutGrid, LogOut, ChevronDown, Settings } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import Image from "next/image";
+import { useState } from "react";
+import { LayoutGrid, LogOut, ChevronDown, Settings } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
-const CRM_URL      = process.env.NEXT_PUBLIC_CRM_URL      || 'https://crm.keala.io'
-const RESEARCH_URL = process.env.NEXT_PUBLIC_RESEARCH_URL || 'https://research.keala.io'
+const CRM_URL = process.env.NEXT_PUBLIC_CRM_URL || "https://crm.keala.io";
+const RESEARCH_URL =
+  process.env.NEXT_PUBLIC_RESEARCH_URL || "https://research.keala.io";
 
 export function Sidebar() {
-  const [featuresOpen, setFeaturesOpen] = useState(true)
-  const router = useRouter()
-  const supabase = createClient()
+  const [featuresOpen, setFeaturesOpen] = useState(true);
+  const router = useRouter();
+  const supabase = createClient();
 
   async function handleLogout() {
-    await supabase.auth.signOut()
-    router.push('/login')
+    await supabase.auth.signOut();
+    router.push("/login");
   }
 
   return (
-    <aside style={{
-      width: 220,
-      minHeight: '100vh',
-      background: '#16191f',
-      borderRight: '1px solid rgba(255,255,255,0.06)',
-      display: 'flex',
-      flexDirection: 'column',
-      padding: '1.5rem 0',
-      flexShrink: 0,
-    }}>
-
+    <aside
+      style={{
+        width: 220,
+        minHeight: "100vh",
+        background: "#0f1923",
+        borderRight: "1px solid rgba(255,255,255,0.05)",
+        display: "flex",
+        flexDirection: "column",
+        padding: "1.5rem 0",
+        flexShrink: 0,
+      }}
+    >
       {/* Logo */}
-      <div style={{ padding: '0 1.25rem', marginBottom: '2rem' }}>
+      <div style={{ padding: "0 1.25rem", marginBottom: "2rem" }}>
         <Image
-          src="/kealalogo.jpeg"
+          src="/newLogo.jpeg"
           alt="Keala Advisors"
           width={160}
           height={40}
-          style={{ objectFit: 'contain', objectPosition: 'left', borderRadius: 4 }}
+          style={{
+            objectFit: "contain",
+            objectPosition: "left",
+            borderRadius: 4,
+          }}
         />
       </div>
-
+      <button
      
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.6rem",
+          padding: "0.55rem 0.75rem",
+          borderRadius: 7,
+          border: "none",
+          background: "transparent",
+          color: "#4a5568",
+          fontSize: "0.82rem",
+          fontFamily: "DM Sans, sans-serif",
+          cursor: "pointer",
+          transition: "color 0.15s",
+          marginBottom: "0.25rem",
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = "#a0aec0")}
+        onMouseLeave={(e) => (e.currentTarget.style.color = "#4a5568")}
+      >
+        <Settings size={14} />
+        <span>Apps</span>
+      </button>
+      <div style={{ flex: 1 }} />
+
       {/* Settings + Logout */}
-      <div style={{ padding: '0 0.75rem' }}>
+      <div style={{ padding: "0 0.75rem" }}>
         <button
-          onClick={() => window.dispatchEvent(new CustomEvent('open-profile-modal'))}
+          onClick={() =>
+            window.dispatchEvent(new CustomEvent("open-profile-modal"))
+          }
           style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-            padding: '0.55rem 0.75rem',
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            padding: "0.55rem 0.75rem",
             borderRadius: 7,
-            border: 'none',
-            background: 'transparent',
-            color: '#4a5568',
-            fontSize: '0.82rem',
-            fontFamily: 'DM Sans, sans-serif',
-            cursor: 'pointer',
-            transition: 'color 0.15s',
-            marginBottom: '0.25rem',
+            border: "none",
+            background: "transparent",
+            color: "#4a5568",
+            fontSize: "0.82rem",
+            fontFamily: "DM Sans, sans-serif",
+            cursor: "pointer",
+            transition: "color 0.15s",
+            marginBottom: "0.25rem",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#a0aec0')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = '#4a5568')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#a0aec0")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#4a5568")}
         >
           <Settings size={14} />
           <span>Settings</span>
@@ -72,30 +104,29 @@ export function Sidebar() {
         <button
           onClick={handleLogout}
           style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-            padding: '0.55rem 0.75rem',
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            padding: "0.55rem 0.75rem",
             borderRadius: 7,
-            border: 'none',
-            background: 'transparent',
-            color: '#4a5568',
-            fontSize: '0.82rem',
-            fontFamily: 'DM Sans, sans-serif',
-            cursor: 'pointer',
-            transition: 'color 0.15s',
+            border: "none",
+            background: "transparent",
+            color: "#4a5568",
+            fontSize: "0.82rem",
+            fontFamily: "DM Sans, sans-serif",
+            cursor: "pointer",
+            transition: "color 0.15s",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#fc8181')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = '#4a5568')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#fc8181")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#4a5568")}
         >
           <LogOut size={14} />
           <span>Logout</span>
         </button>
       </div>
-
     </aside>
-  )
+  );
 }
 
 function NavLink({ href, label }: { href: string; label: string }) {
@@ -105,34 +136,37 @@ function NavLink({ href, label }: { href: string; label: string }) {
       target="_blank"
       rel="noopener noreferrer"
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        padding: '0.5rem 0.75rem',
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5rem",
+        padding: "0.5rem 0.75rem",
         borderRadius: 7,
-        color: '#6b7280',
-        fontSize: '0.875rem',
-        fontFamily: 'DM Sans, sans-serif',
-        textDecoration: 'none',
-        transition: 'background 0.15s, color 0.15s',
-        marginBottom: '0.1rem',
+        color: "#6b7280",
+        fontSize: "0.875rem",
+        fontFamily: "DM Sans, sans-serif",
+        textDecoration: "none",
+        transition: "background 0.15s, color 0.15s",
+        marginBottom: "0.1rem",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
-        e.currentTarget.style.color = '#e2e8f0'
+        e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+        e.currentTarget.style.color = "#e2e8f0";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.background = 'transparent'
-        e.currentTarget.style.color = '#6b7280'
+        e.currentTarget.style.background = "transparent";
+        e.currentTarget.style.color = "#6b7280";
       }}
     >
-      <span style={{
-        width: 4, height: 4,
-        borderRadius: '50%',
-        background: '#4a5568',
-        flexShrink: 0,
-      }} />
+      <span
+        style={{
+          width: 4,
+          height: 4,
+          borderRadius: "50%",
+          background: "#4a5568",
+          flexShrink: 0,
+        }}
+      />
       {label}
     </a>
-  )
+  );
 }

@@ -23,31 +23,22 @@ export default function DashboardPage() {
   }, [])
 
   return (
-    <div style={{ padding: '2.5rem 2rem', maxWidth: 720 }}>
+    <div style={{ padding: '2.5rem 2rem', maxWidth: 1100 }}>
 
-      {/* Logo */}
-      <div style={{ marginBottom: '2.5rem' }}>
-        <Image
-          src="/kealalogo.jpeg"
-          alt="Keala Advisors"
-          width={180}
-          height={45}
-          style={{ objectFit: 'contain', objectPosition: 'left', borderRadius: 4 }}
-        />
-      </div>
+    
 
       {/* Header */}
       <div style={{ marginBottom: '2.5rem' }}>
-        <p style={{ fontSize: '0.75rem', color: '#4a5568', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+        <p style={{ fontSize: '0.75rem', color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
           Internal Portal
         </p>
-        <h1 style={{ fontSize: '1.6rem', fontWeight: 600, color: '#e2e8f0', lineHeight: 1.2 }}>
+        <h1 style={{ fontSize: '1.6rem', fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
           Welcome back, {name}
         </h1>
       </div>
 
       {/* Platform cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
         <PlatformCard
           href={CRM_URL}
           title="CRM & Workflow"
@@ -90,37 +81,37 @@ function PlatformCard({
       rel="noopener noreferrer"
       style={{
         display: 'block',
-        background: '#16191f',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
         borderRadius: 12,
         padding: '1.5rem',
         textDecoration: 'none',
         transition: 'border-color 0.15s, box-shadow 0.15s',
         cursor: 'pointer',
-        boxShadow: '0 1px 6px rgba(0,0,0,0.3)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget as HTMLElement
-        el.style.borderColor = 'rgba(255,255,255,0.15)'
-        el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4)'
+        el.style.borderColor = '#d1d5db'
+        el.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)'
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget as HTMLElement
-        el.style.borderColor = 'rgba(255,255,255,0.07)'
-        el.style.boxShadow = '0 1px 6px rgba(0,0,0,0.3)'
+        el.style.borderColor = '#e5e7eb'
+        el.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)'
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#e2e8f0' }}>{title}</h2>
-        <ArrowUpRight size={16} color="#4a5568" />
+        <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#111827' }}>{title}</h2>
+        <ArrowUpRight size={16} color="#9ca3af" />
       </div>
-      <p style={{ fontSize: '0.85rem', color: '#4a5568', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+      <p style={{ fontSize: '0.85rem', color: '#6b7280', lineHeight: 1.6, marginBottom: '1.25rem' }}>
         {description}
       </p>
       <span style={{
         fontFamily: 'DM Mono, monospace',
         fontSize: '0.7rem',
-        color: '#374151',
+        color: '#9ca3af',
         letterSpacing: '0.03em',
       }}>
         {tag}
