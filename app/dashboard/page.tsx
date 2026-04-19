@@ -4,9 +4,9 @@ import { ArrowUpRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-const CRM_URL          = '/api/redirect?to=https://ops.keala.io'
-const RESEARCH_URL     = '/api/redirect?to=https://research.keala.io'
-const QUESTIONAIRE_URL = '/api/redirect?to=https://questionnaire.keala.io'
+const CRM_URL          = 'https://ops.keala.io'
+const RESEARCH_URL     = 'https://research.keala.io'
+const QUESTIONAIRE_URL = 'https://questionnaire.keala.io'
 
 export default function DashboardPage() {
   const [name, setName] = useState('there')
