@@ -58,7 +58,7 @@ function LoginForm() {
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(
       email,
       {
-        redirectTo: `https://www.keala.io/reset-password`,
+        redirectTo: `https://keala.io/reset-password`,
       },
     );
 
